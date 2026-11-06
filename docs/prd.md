@@ -1,7 +1,7 @@
 ---
 documento: prd
 proyecto: Recomendador de Eventos para Peewah
-version: 0.1.1
+version: 0.1.2
 fecha: 2026-11-06
 estado: borrador
 autores: [Jhoan Esteban Delgado Mejia, Daniel Felipe Bautista Sánchez, Juan Felipe Castro Reyes, Sebastián Mejía Trujillo, Juan David Meza Castro]
@@ -33,13 +33,13 @@ Los organizadores de eventos recurrentes en Peewah reconstruyen desde cero o con
   1. Captura de características generales del nuevo evento (nombre, tipo de evento, tamaño estimado, fecha y modalidad presencial/virtual).
   2. Generación y visualización de bloques sugeridos (formulario de inscripción, cronograma de actividades y tareas con responsables), con opción individual de aceptar, editar o rechazar cada bloque.
   3. Visualización de recomendaciones de fechas (día para abrir inscripciones y calendario de recordatorios) y confirmación/guardado del evento configurado.
+- Motor de envío de correos electrónicos para la comunicación y envío de recordatorios a los inscritos/asistentes.
 - Consulta posterior de las recomendaciones y fechas sugeridas una vez configurado el evento.
 - Dataset sintético de referencia (3 eventos con múltiples ediciones) integrado con un modelo de IA para generar las sugerencias del MVP.
 
 ### No incluye
 
 - Modelos estadísticos nativos en el backend (clustering, k-NN, seasonal decomposition o global forecasting sobre series temporales reales).
-- Motor propio de envío masivo de correos electrónicos ni configuración de protocolos de dominio (SPF/DKIM).
 - Pasarelas de procesamiento de pagos o gestión de devoluciones a asistentes.
 - Edición visual avanzada o personalización gráfica libre de la interfaz de Peewah.
 
@@ -57,5 +57,6 @@ Los organizadores de eventos recurrentes en Peewah reconstruyen desde cero o con
 
 ## Historial
 
+- 0.1.2 · 2026-11-06 · Inclusión del motor de envío de correos electrónicos en el alcance del MVP.
 - 0.1.1 · 2026-11-06 · Actualización de autores y ajuste de fecha límite de entrega (semana del 25/11/2026).
 - 0.1.0 · 2026-11-06 · Primera versión borrador creada tras la entrevista inicial de definición del producto.
