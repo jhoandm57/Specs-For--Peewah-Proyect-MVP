@@ -1,7 +1,7 @@
 ---
 documento: prd
 proyecto: Recomendador de Eventos para Peewah
-version: 0.1.3
+version: 0.1.4
 fecha: 2026-11-06
 estado: borrador
 autores: [Jhoan Esteban Delgado Mejia, Daniel Felipe Bautista Sánchez, Juan Felipe Castro Reyes, Sebastián Mejía Trujillo, Juan David Meza Castro]
@@ -15,13 +15,13 @@ Los organizadores de eventos recurrentes en Peewah reconstruyen desde cero o con
 
 ## Usuarios
 
-- **Administrador del Evento (Creador / Superusuario)**: Quiere describir las características generales de su nuevo evento y recibir recomendaciones automáticas de configuración operativa y fechas clave de comunicación para tomar decisiones rápidas (aceptar, editar o rechazar).
+- **Administrador del Evento (Creador / Superusuario)**: Quiere describir las características generales de su nuevo evento y recibir recomendaciones automáticas de configuración operativa y fechas clave de comunicación y decidir sobre cada una (aceptar, editar o rechazar).
 - **Colaborador / Miembro del Proyecto**: Quiere consultar las configuraciones y recomendaciones generadas para apoyar en la revisión técnica y ejecución de tareas del evento.
 
 ## Objetivos
 
 - **O-01** Reducir el tiempo necesario para configurar un nuevo evento recurrente. *Se cumple si* configurar un evento con el recomendador toma menos de 15 minutos.
-- **O-02** Proporcionar sugerencias pertinentes de configuración operativa a partir del historial disponible. *Se cumple si* el usuario puede visualizar, evaluar y registrar su decisión (aceptar, editar o rechazar) sobre los bloques recomendados de formulario, cronograma y tareas.
+- **O-02** Proporcionar sugerencias pertinentes de configuración operativa a partir del historial disponible. *Se cumple si*, en las pruebas con el dataset sintético, el administrador acepta o edita al menos 2 de los 3 bloques recomendados (formulario, cronograma y tareas) en al menos 7 de cada 10 eventos que configura.
 - **O-03** Recomendar el momento oportuno de comunicación con los asistentes. *Se cumple si* el usuario recibe una fecha sugerida para abrir inscripciones y una programación de días para el envío de recordatorios antes del evento.
 
 ## Alcance
@@ -40,7 +40,7 @@ Los organizadores de eventos recurrentes en Peewah reconstruyen desde cero o con
 
 ### No incluye
 
-- Modelos estadísticos nativos en el backend (clustering, k-NN, seasonal decomposition o global forecasting sobre series temporales reales).
+- Modelos de predicción entrenados con los datos reales de producción de Peewah.
 - Pasarelas de procesamiento de pagos o gestión de devoluciones a asistentes.
 - Edición visual avanzada o personalización gráfica libre de la interfaz de Peewah.
 
@@ -58,6 +58,7 @@ Los organizadores de eventos recurrentes en Peewah reconstruyen desde cero o con
 
 ## Historial
 
+- 0.1.4 · 2026-11-06 · Criterio de O-02 medible (al menos 2 de 3 bloques aceptados o editados en 7 de cada 10 eventos), *No incluye* sin nombres de técnicas y "decisiones rápidas" reemplazado en Usuarios, según el reporte de la crítica.
 - 0.1.3 · 2026-11-06 · Criterio de O-01 ajustado a menos de 15 minutos, restricciones limitadas a plataformas (móvil, escritorio y web), motor de correos marcado como opcional (priorizando fechas de recordatorios), adición de inicio y cierre de sesión de usuarios e inclusión de modalidad híbrida en el flujo guiado.
 - 0.1.2 · 2026-11-06 · Inclusión del motor de envío de correos electrónicos en el alcance del MVP.
 - 0.1.1 · 2026-11-06 · Actualización de autores y ajuste de fecha límite de entrega (semana del 25/11/2026).

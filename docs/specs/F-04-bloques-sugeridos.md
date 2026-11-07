@@ -1,11 +1,11 @@
 ---
 id: F-04
 titulo: Revisar los bloques sugeridos
-version: 0.1.0
+version: 0.2.0
 fecha: 2026-11-06
 estado: borrador
 autores: [Juan Felipe Castro Reyes]
-requisitos: [RF-06, RF-07, RF-08, RF-09, RF-10, RNF-03, RNF-06]
+requisitos: [RF-06, RF-07, RF-08, RF-09, RF-10, RF-15, RNF-03]
 depende_de: [F-03]
 ---
 
@@ -76,4 +76,5 @@ En el paso 2, el administrador recibe un formulario de inscripción, un cronogra
 
 ## Historial
 
+- 0.2.0 · 2026-11-06 · Cita RF-15 (antes RNF-06), por requisitos 0.2.0.
 - 0.1.0 · 2026-11-06 · Primera versión.

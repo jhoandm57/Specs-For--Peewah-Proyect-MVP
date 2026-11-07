@@ -51,6 +51,7 @@ docs/
   prd.md                  PRD
   requisitos.md           requisitos funcionales y no funcionales
   architectural_spine.md  reglas de arquitectura
+  modelo.md               tablas y relaciones de la base de datos
   specs/                  una spec por funcionalidad, README.md (índice) y reporte.md
 ```
 
@@ -64,7 +65,8 @@ anteriores: léelos antes de proponer o escribir código.
 1. `docs/prd.md` · el problema, los usuarios, los objetivos (`O-01`…) y el alcance.
 2. `docs/requisitos.md` · los requisitos (`RF-01`…, `RNF-01`…), cada uno ligado a un objetivo.
 3. `docs/architectural_spine.md` · las reglas de arquitectura (`AD-01`…) que todos siguen.
-4. `docs/specs/` · una spec por funcionalidad (`F-01`…), su índice `README.md` y el `reporte.md` de la crítica.
+4. `docs/modelo.md` · las tablas, sus atributos y relaciones, con el diagrama.
+5. `docs/specs/` · una spec por funcionalidad (`F-01`…), su índice `README.md` y el `reporte.md` de la crítica.
 
 Para implementar una funcionalidad, lee su spec y las invariantes de la spine que toca.
 Al terminarla, cambia su `estado` a `implementada` y actualiza el índice.

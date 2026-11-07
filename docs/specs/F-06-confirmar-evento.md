@@ -1,7 +1,7 @@
 ---
 id: F-06
 titulo: Confirmar y guardar el evento
-version: 0.1.0
+version: 0.2.0
 fecha: 2026-11-06
 estado: borrador
 autores: [Juan Felipe Castro Reyes]
@@ -19,13 +19,13 @@ Al final del flujo guiado, el administrador revisa el resumen y guarda el evento
 
 1. El sistema muestra el resumen: las características del evento, la decisión y el contenido de cada bloque, la apertura de inscripciones y los recordatorios.
 2. El administrador elige "Confirmar evento".
-3. El sistema guarda el evento como configurado y muestra "Evento configurado".
+3. El sistema cambia el evento de "en configuración" a "configurado" y muestra "Evento configurado".
 4. El sistema abre la consulta del evento (F-07).
 
 ## Flujos alternos
 
 - **A1 · Corregir algo:** desde el resumen, el administrador vuelve a cualquier paso, cambia lo que necesita y regresa al resumen.
-- **A2 · Salir sin confirmar:** si el administrador intenta salir del flujo, el sistema pregunta "¿Salir sin guardar? Se perderá lo que no confirmaste"; si confirma, el evento no se guarda.
+- **A2 · Salir sin confirmar:** si el administrador intenta salir del flujo, el sistema pregunta "¿Salir sin guardar? Se perderá lo que no confirmaste"; si confirma, el sistema descarta el evento en configuración y no aparece en la lista.
 
 ## Reglas
 
@@ -42,7 +42,7 @@ Al final del flujo guiado, el administrador revisa el resumen y guarda el evento
 
 ## Datos
 
-- Evento con sus características, sus bloques con su decisión, la apertura de inscripciones, los recordatorios y su estado (configurado).
+- Evento con sus características, sus bloques con su decisión, la apertura de inscripciones, los recordatorios y su estado (en configuración o configurado).
 
 ## Criterios de aceptación
 
@@ -64,4 +64,5 @@ Al final del flujo guiado, el administrador revisa el resumen y guarda el evento
 
 ## Historial
 
+- 0.2.0 · 2026-11-06 · Tras la crítica: el evento existe "en configuración" desde el paso 1 (F-03 lo guarda y AD-07 guarda los bloques), así que salir sin confirmar lo descarta.
 - 0.1.0 · 2026-11-06 · Primera versión.

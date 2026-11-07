@@ -1,11 +1,11 @@
 ---
 id: F-07
 titulo: Consultar la configuración y las recomendaciones de un evento
-version: 0.1.0
+version: 0.2.0
 fecha: 2026-11-06
 estado: borrador
 autores: [Juan Felipe Castro Reyes]
-requisitos: [RF-05, RNF-06]
+requisitos: [RF-05, RF-15]
 depende_de: [F-06]
 ---
 
@@ -59,4 +59,5 @@ El administrador y los colaboradores consultan, después de guardado el evento, 
 
 ## Historial
 
+- 0.2.0 · 2026-11-06 · Cita RF-15 (antes RNF-06), por requisitos 0.2.0.
 - 0.1.0 · 2026-11-06 · Primera versión.

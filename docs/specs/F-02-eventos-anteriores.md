@@ -31,6 +31,7 @@ El administrador ve los eventos que su organización ya configuró, para usar un
 
 - Solo se muestran eventos de la organización del usuario con sesión.
 - Los colaboradores también ven la lista y el detalle, pero sin la opción "Usar como base".
+- Solo se listan eventos configurados (F-06); los que están en configuración no aparecen.
 - Los eventos del conjunto de datos de referencia (RNF-05) se muestran como eventos de su organización.
 
 ## Estados
@@ -64,5 +65,5 @@ El administrador ve los eventos que su organización ya configuró, para usar un
 
 ## Historial
 
-- 0.2.0 · 2026-11-06 · Tras la crítica: los colaboradores también ven la lista, sin "Usar como base" (CA-6), para que F-07 sea alcanzable por ellos.
+- 0.2.0 · 2026-11-06 · Tras la crítica: los colaboradores también ven la lista, sin "Usar como base" (CA-6), para que F-07 sea alcanzable por ellos; solo se listan eventos configurados, para cuadrar con F-06.
 - 0.1.0 · 2026-11-06 · Primera versión.
