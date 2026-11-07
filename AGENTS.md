@@ -36,26 +36,9 @@ inscripciones y los recordatorios.
 
 ## Estructura actual
 
-Todavía no hay código: no existe `lib/` ni proyecto Flutter. Por ahora el repositorio tiene:
-
-```
-AGENTS.md                 este archivo
-README.md
-.agents/skills/           skills de Spec Driven Development
-  sdd-prd/                entrevista y escribe docs/prd.md
-  sdd-requisitos/         saca RF y RNF del PRD a docs/requisitos.md
-  sdd-arquitectura/       escribe la architectural spine (Flutter + Supabase)
-  sdd-specs/              escribe una spec por funcionalidad en docs/specs/
-  sdd-critica/            revisa el conjunto de specs con métricas
-docs/
-  prd.md                  PRD
-  requisitos.md           requisitos funcionales y no funcionales
-  architectural_spine.md  reglas de arquitectura
-  modelo.md               tablas y relaciones de la base de datos
-  specs/                  una spec por funcionalidad, README.md (índice) y reporte.md
-```
-
-Cuando se cree la app, actualiza esta sección con la estructura de `lib/`.
+El prototipo Flutter se encuentra en el subdirectorio app/. Su punto de entrada es
+app/lib/main.dart y las plataformas generadas son Android, web y Windows.
+Los documentos del proyecto están en docs/ y las skills de SDD en .agents/skills/.
 
 ## Documentos
 
