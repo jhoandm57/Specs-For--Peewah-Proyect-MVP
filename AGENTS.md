@@ -1,3 +1,13 @@
+# AGENTS.md · Recomendador de Eventos para Peewah
+
+## Qué es la app
+
+Un recomendador para Peewah que, en un flujo guiado de tres pasos, ayuda al administrador
+de un evento recurrente a configurarlo: describe el evento, recibe bloques sugeridos
+(formulario, cronograma y tareas) que acepta, edita o rechaza, y recibe las fechas
+sugeridas para abrir inscripciones y enviar recordatorios. Es el MVP del curso Seminario
+de Ingeniería de Software (Icesi), con entrega la semana del 25/11/2026.
+
 ## Contexto
 
 Peewah es una plataforma para crear y gestionar eventos. Las organizaciones que hacen
@@ -23,3 +33,41 @@ fecha de cada inscripción sale la curva de inscripciones acumuladas por días a
 evento. Por último guarda las recomendaciones generadas, la decisión del organizador
 sobre cada bloque (aceptado, editado o rechazado), la fecha sugerida para abrir
 inscripciones y los recordatorios.
+
+## Estructura actual
+
+Todavía no hay código: no existe `lib/` ni proyecto Flutter. Por ahora el repositorio tiene:
+
+```
+AGENTS.md                 este archivo
+README.md
+.agents/skills/           skills de Spec Driven Development
+  sdd-prd/                entrevista y escribe docs/prd.md
+  sdd-requisitos/         saca RF y RNF del PRD a docs/requisitos.md
+  sdd-arquitectura/       escribe la architectural spine (Flutter + Supabase)
+  sdd-specs/              escribe una spec por funcionalidad en docs/specs/
+  sdd-critica/            revisa el conjunto de specs con métricas
+docs/
+  prd.md                  PRD
+  requisitos.md           requisitos funcionales y no funcionales
+  architectural_spine.md  reglas de arquitectura
+  modelo.md               tablas y relaciones de la base de datos
+  specs/                  una spec por funcionalidad, README.md (índice) y reporte.md
+```
+
+Cuando se cree la app, actualiza esta sección con la estructura de `lib/`.
+
+## Documentos
+
+`docs/` tiene los documentos del proyecto, en este orden. Cada uno se basa en los
+anteriores: léelos antes de proponer o escribir código.
+
+1. `docs/prd.md` · el problema, los usuarios, los objetivos (`O-01`…) y el alcance.
+2. `docs/requisitos.md` · los requisitos (`RF-01`…, `RNF-01`…), cada uno ligado a un objetivo.
+3. `docs/architectural_spine.md` · las reglas de arquitectura (`AD-01`…) que todos siguen.
+4. `docs/modelo.md` · las tablas, sus atributos y relaciones, con el diagrama.
+5. `docs/specs/` · una spec por funcionalidad (`F-01`…), su índice `README.md` y el `reporte.md` de la crítica.
+
+Para implementar una funcionalidad, lee su spec y las invariantes de la spine que toca.
+Al terminarla, cambia su `estado` a `implementada` y actualiza el índice.
+Si un cambio contradice uno de estos documentos, dilo antes de hacerlo; no lo cambies en silencio.
