@@ -1,30 +1,29 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:app/components/event_card.dart';
+import 'package:app/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:app/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('La lista filtra eventos y reporta la selección', (tester) async {
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Los eventos más recientes aparecen primero.
+    expect(
+      tester.widgetList<EventCard>(find.byType(EventCard)).first.name,
+      'Seminario de Innovación 2025',
+    );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.tap(find.text('Congreso'));
+    await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // El filtro conserva las dos ediciones de la categoría seleccionada.
+    expect(find.byType(EventCard), findsNWidgets(2));
+    expect(find.text('Feria Empresarial 2025'), findsNothing);
+
+    await tester.tap(find.text('Congreso de Salud 2025'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Evento seleccionado: Congreso de Salud 2025'),
+      findsOneWidget,
+    );
   });
 }
