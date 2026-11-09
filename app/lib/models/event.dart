@@ -155,6 +155,41 @@ class SuggestedDate {
     required this.daysBeforeFinal,
     required this.decision,
   });
+
+  SuggestedDate accept() => copyWith(
+    decision: RecommendationDecision.aceptado,
+    daysBeforeFinal: daysBeforeSuggested,
+  );
+
+  SuggestedDate edit(int days) => copyWith(
+    decision: RecommendationDecision.editado,
+    daysBeforeFinal: days,
+  );
+
+  SuggestedDate reject() => copyWith(
+    decision: RecommendationDecision.rechazado,
+    daysBeforeFinal: null,
+  );
+
+  int? get currentDaysBefore => switch (decision) {
+    RecommendationDecision.editado => daysBeforeFinal,
+    RecommendationDecision.rechazado => null,
+    _ => daysBeforeSuggested,
+  };
+
+  SuggestedDate copyWith({
+    SuggestedDateType? type,
+    int? daysBeforeSuggested,
+    int? daysBeforeFinal,
+    RecommendationDecision? decision,
+  }) {
+    return SuggestedDate(
+      type: type ?? this.type,
+      daysBeforeSuggested: daysBeforeSuggested ?? this.daysBeforeSuggested,
+      daysBeforeFinal: daysBeforeFinal ?? this.daysBeforeFinal,
+      decision: decision ?? this.decision,
+    );
+  }
 }
 
 class EventRecommendation {
@@ -214,22 +249,32 @@ class Event {
   });
 
   Event copyWith({
+    String? id,
+    String? organizationId,
+    String? name,
+    EventCategory? category,
+    EventModality? modality,
+    int? estimatedAttendees,
+    int? registrations,
+    DateTime? date,
+    EventStatus? status,
+    String? baseEventName,
     List<RegistrationField>? registrationFields,
     List<ScheduleActivity>? schedule,
     List<EventTask>? tasks,
     EventRecommendation? recommendation,
   }) {
     return Event(
-      id: id,
-      organizationId: organizationId,
-      name: name,
-      category: category,
-      modality: modality,
-      estimatedAttendees: estimatedAttendees,
-      registrations: registrations,
-      date: date,
-      status: status,
-      baseEventName: baseEventName,
+      id: id ?? this.id,
+      organizationId: organizationId ?? this.organizationId,
+      name: name ?? this.name,
+      category: category ?? this.category,
+      modality: modality ?? this.modality,
+      estimatedAttendees: estimatedAttendees ?? this.estimatedAttendees,
+      registrations: registrations ?? this.registrations,
+      date: date ?? this.date,
+      status: status ?? this.status,
+      baseEventName: baseEventName ?? this.baseEventName,
       registrationFields: registrationFields ?? this.registrationFields,
       schedule: schedule ?? this.schedule,
       tasks: tasks ?? this.tasks,

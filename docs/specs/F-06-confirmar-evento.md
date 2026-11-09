@@ -3,7 +3,7 @@ id: F-06
 titulo: Confirmar y guardar el evento
 version: 0.2.0
 fecha: 2026-11-06
-estado: borrador
+estado: implementada
 autores: [Juan Felipe Castro Reyes]
 requisitos: [RF-04, RNF-02]
 depende_de: [F-03, F-04, F-05]

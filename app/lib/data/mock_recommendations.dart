@@ -98,3 +98,99 @@ RecommendationBlock _pending(List<String> items, RecommendationBlock block) {
     originEvents: block.originEvents,
   );
 }
+
+/// Resultado simulado de calcular fechas sugeridas para el paso 3 (F-05).
+class DateSuggestions {
+  final List<SuggestedDate> dates;
+  final bool usesTypicalCurve;
+  final bool openingAdjustedToToday;
+
+  const DateSuggestions({
+    required this.dates,
+    required this.usesTypicalCurve,
+    this.openingAdjustedToToday = false,
+  });
+}
+
+/// Sugiere la fecha de apertura de inscripciones y los recordatorios para un nuevo evento (F-05).
+DateSuggestions suggestDates({
+  required Event draft,
+  required List<Event> history,
+  Event? baseEvent,
+  DateTime? now,
+}) {
+  final currentDate = now ?? DateTime.now();
+  final today = DateTime(currentDate.year, currentDate.month, currentDate.day);
+  final eventDay = DateTime(draft.date.year, draft.date.month, draft.date.day);
+
+  final similar =
+      history
+          .where(
+            (event) =>
+                event.id != draft.id &&
+                event.organizationId == draft.organizationId &&
+                event.category == draft.category &&
+                event.modality == draft.modality,
+          )
+          .toList()
+        ..sort((a, b) => b.date.compareTo(a.date));
+
+  final sources = <Event>[
+    if (baseEvent != null && baseEvent.organizationId == draft.organizationId)
+      baseEvent,
+    ...similar.where((event) => event.id != baseEvent?.id),
+  ];
+
+  final bool usesTypicalCurve = sources.isEmpty;
+  final List<SuggestedDate> sourceDates = usesTypicalCurve
+      ? typicalRecommendation(draft.category).dates
+      : sources.first.recommendation.dates;
+
+  var openingAdjusted = false;
+  final dates = <SuggestedDate>[];
+
+  for (final date in sourceDates) {
+    if (date.type == SuggestedDateType.apertura) {
+      final days = date.daysBeforeSuggested;
+      final openingDate = eventDay.subtract(Duration(days: days));
+
+      if (openingDate.isBefore(today)) {
+        final daysFromToday = eventDay.difference(today).inDays;
+        final adjustedDays = daysFromToday > 0 ? daysFromToday : 0;
+        dates.add(
+          SuggestedDate(
+            type: SuggestedDateType.apertura,
+            daysBeforeSuggested: adjustedDays,
+            daysBeforeFinal: null,
+            decision: RecommendationDecision.pendiente,
+          ),
+        );
+        openingAdjusted = true;
+      } else {
+        dates.add(
+          SuggestedDate(
+            type: SuggestedDateType.apertura,
+            daysBeforeSuggested: days,
+            daysBeforeFinal: null,
+            decision: RecommendationDecision.pendiente,
+          ),
+        );
+      }
+    } else {
+      dates.add(
+        SuggestedDate(
+          type: SuggestedDateType.recordatorio,
+          daysBeforeSuggested: date.daysBeforeSuggested,
+          daysBeforeFinal: null,
+          decision: RecommendationDecision.pendiente,
+        ),
+      );
+    }
+  }
+
+  return DateSuggestions(
+    dates: dates,
+    usesTypicalCurve: usesTypicalCurve,
+    openingAdjustedToToday: openingAdjusted,
+  );
+}

@@ -3,7 +3,7 @@ id: F-05
 titulo: Revisar las fechas sugeridas
 version: 0.2.0
 fecha: 2026-11-06
-estado: borrador
+estado: implementada
 autores: [Juan Felipe Castro Reyes]
 requisitos: [RF-11, RF-12, RF-13, RNF-03]
 depende_de: [F-03]

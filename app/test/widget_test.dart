@@ -78,7 +78,10 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.tap(find.byKey(const Key('event_card_evt-congreso-2025')));
+    final eventCard = find.byKey(const Key('event_card_evt-congreso-2025'));
+    await tester.ensureVisible(eventCard);
+    await tester.pumpAndSettle();
+    await tester.tap(eventCard);
     await tester.pumpAndSettle();
 
     expect(find.text('Detalle del evento'), findsOneWidget);
@@ -126,7 +129,10 @@ void main() {
       findsNothing,
     );
 
-    await tester.tap(find.byKey(const Key('event_card_evt-congreso-2025')));
+    final eventCard = find.byKey(const Key('event_card_evt-congreso-2025'));
+    await tester.ensureVisible(eventCard);
+    await tester.pumpAndSettle();
+    await tester.tap(eventCard);
     await tester.pumpAndSettle();
 
     expect(find.text('Detalle del evento'), findsOneWidget);
@@ -189,6 +195,28 @@ void main() {
       await tester.ensureVisible(nextButton);
       await tester.pumpAndSettle();
       await tester.tap(nextButton);
+      await tester.pumpAndSettle();
+
+      // Paso 3: Fechas sugeridas (F-05)
+      expect(find.text('Paso 3 de 3 · Fechas sugeridas'), findsOneWidget);
+      final acceptOpening = find.byKey(const Key('accept_apertura'));
+      await tester.ensureVisible(acceptOpening);
+      await tester.pumpAndSettle();
+      await tester.tap(acceptOpening);
+      await tester.pumpAndSettle();
+
+      final temporalityNext = find.byKey(const Key('temporality_next_button'));
+      await tester.ensureVisible(temporalityNext);
+      await tester.pumpAndSettle();
+      await tester.tap(temporalityNext);
+      await tester.pumpAndSettle();
+
+      // Confirmar evento (F-06)
+      expect(find.text('Confirmar evento'), findsWidgets);
+      final confirmButton = find.byKey(const Key('confirm_event_button'));
+      await tester.ensureVisible(confirmButton);
+      await tester.pumpAndSettle();
+      await tester.tap(confirmButton);
       await tester.pumpAndSettle();
 
       expect(find.text('Detalle del evento'), findsOneWidget);
