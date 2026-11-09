@@ -90,6 +90,7 @@ class _ConfirmEventScreenState extends State<ConfirmEventScreen> {
         builder: (_) => EventDetailScreen(
           event: configuredEvent,
           user: widget.user,
+          onEventCreated: widget.onEventCreated,
           onEventUpdated: (updated) {
             mockEvents.removeWhere((e) => e.id == updated.id);
             mockEvents.insert(0, updated);

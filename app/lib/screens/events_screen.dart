@@ -87,6 +87,7 @@ class _EventsScreenState extends State<EventsScreen> {
         builder: (_) => EventDetailScreen(
           event: event,
           user: widget.user,
+          onEventCreated: _onEventCreated,
           onEventUpdated: _onEventUpdated,
           onEventDeleted: _onEventDeleted,
         ),
@@ -110,8 +111,7 @@ class _EventsScreenState extends State<EventsScreen> {
     final shouldLogout = await ConfirmDialog.show(
       context: context,
       title: '¿Cerrar sesión?',
-      message:
-          'Al salir, nadie más podrá ver los datos de tu organización desde este dispositivo.',
+      message: 'Al salir, nadie más podrá ver los datos de tu organización desde este dispositivo.',
       confirmLabel: 'Cerrar sesión',
       cancelLabel: 'Cancelar',
       confirmKey: const Key('confirm_logout_button'),

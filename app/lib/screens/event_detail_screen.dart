@@ -12,6 +12,8 @@ import 'new_event_screen.dart';
 class EventDetailScreen extends StatefulWidget {
   final Event event;
   final AuthUser user;
+  // Notifica al listado al confirmar un evento creado desde este detalle.
+  final ValueChanged<Event>? onEventCreated;
   final ValueChanged<Event>? onEventUpdated;
   final ValueChanged<String>? onEventDeleted;
 
@@ -19,6 +21,7 @@ class EventDetailScreen extends StatefulWidget {
     super.key,
     required this.event,
     required this.user,
+    this.onEventCreated,
     this.onEventUpdated,
     this.onEventDeleted,
   });
@@ -40,8 +43,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     final shouldLogout = await ConfirmDialog.show(
       context: context,
       title: '¿Cerrar sesión?',
-      message:
-          'Al salir, nadie más podrá ver los datos de tu organización desde este dispositivo.',
+      message: 'Al salir, nadie más podrá ver los datos de tu organización desde este dispositivo.',
       confirmLabel: 'Cerrar sesión',
       cancelLabel: 'Cancelar',
       confirmKey: const Key('confirm_logout_button'),
@@ -55,7 +57,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   void _useAsBase() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => NewEventScreen(user: widget.user, baseEvent: _currentEvent),
+        builder: (_) => NewEventScreen(
+          user: widget.user,
+          baseEvent: _currentEvent,
+          onEventCreated: widget.onEventCreated,
+        ),
       ),
     );
   }
@@ -63,10 +69,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   Future<void> _openEdit() async {
     final updated = await Navigator.of(context).push<Event>(
       MaterialPageRoute(
-        builder: (_) => NewEventScreen(
-          user: widget.user,
-          eventToEdit: _currentEvent,
-        ),
+        builder: (_) =>
+            NewEventScreen(user: widget.user, eventToEdit: _currentEvent),
       ),
     );
 
@@ -111,7 +115,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final hasAccess = _currentEvent.organizationId == widget.user.organizationId;
+    final hasAccess =
+        _currentEvent.organizationId == widget.user.organizationId;
 
     return Scaffold(
       appBar: AppBar(

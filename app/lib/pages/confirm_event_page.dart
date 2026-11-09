@@ -42,8 +42,12 @@ class ConfirmEventPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // El estado pasa a otra línea si el título ocupa todo el ancho.
+                      Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 12,
+                        runSpacing: 8,
                         children: [
                           const Text(
                             'Resumen de configuración',
@@ -116,11 +120,14 @@ class ConfirmEventPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            for (var i = 0;
-                                i < event.recommendation.dates.length;
-                                i++)
+                            for (
+                              var i = 0;
+                              i < event.recommendation.dates.length;
+                              i++
+                            )
                               SuggestedDateCard(
-                                title: event.recommendation.dates[i].type ==
+                                title:
+                                    event.recommendation.dates[i].type ==
                                         SuggestedDateType.apertura
                                     ? 'Apertura de inscripciones'
                                     : 'Recordatorio $i',
@@ -206,22 +213,27 @@ class _ConfirmationBottomNav extends StatelessWidget {
         color: AppColors.white,
         border: Border(top: BorderSide(color: AppColors.gray200)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SecondaryButton(
-            buttonKey: const Key('cancel_confirmation_button'),
-            onPressed: isSaving ? null : onCancel,
-            label: 'Salir sin guardar',
-          ),
-          PrimaryButton(
-            buttonKey: const Key('confirm_event_button'),
-            onPressed: isSaving ? null : onConfirm,
-            isLoading: isSaving,
-            icon: Icons.check_circle_outline_rounded,
-            label: 'Confirmar evento',
-          ),
-        ],
+      child: SizedBox(
+        width: double.infinity,
+        child: Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          spacing: 12,
+          runSpacing: 8,
+          children: [
+            SecondaryButton(
+              buttonKey: const Key('cancel_confirmation_button'),
+              onPressed: isSaving ? null : onCancel,
+              label: 'Salir sin guardar',
+            ),
+            PrimaryButton(
+              buttonKey: const Key('confirm_event_button'),
+              onPressed: isSaving ? null : onConfirm,
+              isLoading: isSaving,
+              icon: Icons.check_circle_outline_rounded,
+              label: 'Confirmar evento',
+            ),
+          ],
+        ),
       ),
     );
   }
