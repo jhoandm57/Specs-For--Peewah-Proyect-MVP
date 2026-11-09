@@ -137,6 +137,14 @@ void main() {
 
     // CA-6: el detalle muestra las tres decisiones.
     await _tapKey(tester, 'recommendation_next_button');
+    expect(find.text('Paso 3 de 3 · Fechas sugeridas'), findsOneWidget);
+
+    await _tapKey(tester, 'accept_apertura');
+    await _tapKey(tester, 'temporality_next_button');
+
+    expect(find.text('Confirmar evento'), findsWidgets);
+    await _tapKey(tester, 'confirm_event_button');
+
     expect(find.text('Detalle del evento'), findsOneWidget);
     expect(find.text('Rechazado'), findsWidgets);
     expect(find.text('Editado'), findsWidgets);

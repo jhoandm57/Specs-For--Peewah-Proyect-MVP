@@ -6,7 +6,7 @@ import '../data/mock_recommendations.dart';
 import '../models/event.dart';
 import '../pages/recommendation_page.dart';
 import 'edit_block_screen.dart';
-import 'event_detail_screen.dart';
+import 'temporality_screen.dart';
 
 /// Screen anfitriona del paso 2 del asistente (F-04).
 /// Guarda los bloques sugeridos y la decisión de cada uno; la página solo
@@ -111,14 +111,17 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
     );
   }
 
-  /// Hasta que exista el paso 3 (F-05), el asistente termina en el detalle
-  /// del evento. El paso 3 recibe este mismo evento con los bloques decididos.
+  /// Conecta con el paso 3 (F-05 · Fechas sugeridas) pasando el evento
+  /// con los bloques y decisiones tomadas.
   void _goToNextStep(Event event) {
-    Navigator.of(context).pushAndRemoveUntil(
+    Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => EventDetailScreen(event: event, user: widget.user),
+        builder: (_) => TemporalityScreen(
+          user: widget.user,
+          draft: event,
+          baseEvent: widget.baseEvent,
+        ),
       ),
-      (route) => route.isFirst,
     );
   }
 

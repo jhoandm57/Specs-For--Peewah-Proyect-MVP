@@ -8,6 +8,7 @@ import '../components/empty_state.dart';
 import '../components/recommendation_block_card.dart';
 import '../components/section_card.dart';
 import '../components/status_badge.dart';
+import '../components/suggested_date_card.dart';
 
 class EventDetailPage extends StatelessWidget {
   final Event event;
@@ -354,7 +355,11 @@ class _RecommendationsSection extends StatelessWidget {
             const _MutedText('Sin fechas estimadas para este evento.')
           else
             for (final entry in dateEntries)
-              _SuggestedDateRow(eventDate: event.date, entry: entry),
+              SuggestedDateCard(
+                title: entry.title,
+                date: entry.date,
+                eventDate: event.date,
+              ),
         ],
       ),
     );
@@ -593,105 +598,6 @@ class _DecisionRow extends StatelessWidget {
   }
 }
 
-class _SuggestedDateRow extends StatelessWidget {
-  final DateTime eventDate;
-  final _DateEntry entry;
-
-  const _SuggestedDateRow({required this.eventDate, required this.entry});
-
-  @override
-  Widget build(BuildContext context) {
-    final date = entry.date;
-    final suggestedDate = dateFromDaysBefore(
-      eventDate,
-      date.daysBeforeSuggested,
-    );
-    final finalDate = date.daysBeforeFinal == null
-        ? null
-        : dateFromDaysBefore(eventDate, date.daysBeforeFinal!);
-    final isRejected = date.decision == RecommendationDecision.rechazado;
-    final isEdited = date.decision == RecommendationDecision.editado;
-
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.gray200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  entry.title,
-                  style: const TextStyle(
-                    color: AppColors.black,
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              StatusBadge(
-                label: date.decision.label,
-                filled: date.decision == RecommendationDecision.aceptado,
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Sugerido: ${formatLongDate(suggestedDate)} (${formatDaysBefore(date.daysBeforeSuggested)})',
-            style: const TextStyle(
-              color: AppColors.gray600,
-              fontSize: 11.5,
-              height: 1.35,
-            ),
-          ),
-          if (isRejected) ...[
-            const SizedBox(height: 3),
-            const Text(
-              'No programado: el recordatorio fue rechazado.',
-              style: TextStyle(
-                color: AppColors.black,
-                fontSize: 11.5,
-                fontWeight: FontWeight.w700,
-                height: 1.35,
-              ),
-            ),
-          ] else if (isEdited && finalDate != null) ...[
-            const SizedBox(height: 3),
-            Text(
-              'Final: ${formatLongDate(finalDate)} (${formatDaysBefore(date.daysBeforeFinal!)})',
-              style: const TextStyle(
-                color: AppColors.black,
-                fontSize: 11.5,
-                fontWeight: FontWeight.w800,
-                height: 1.35,
-              ),
-            ),
-          ] else if (finalDate != null) ...[
-            const SizedBox(height: 3),
-            Text(
-              'Programado: ${formatLongDate(finalDate)}',
-              style: const TextStyle(
-                color: AppColors.black,
-                fontSize: 11.5,
-                fontWeight: FontWeight.w800,
-                height: 1.35,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
 
 class _MutedText extends StatelessWidget {
   final String text;

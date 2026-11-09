@@ -14,4 +14,6 @@ abstract final class AppColors {
   static const gray200 = Color(0xFFE5E5E5);
   static const gray100 = Color(0xFFF5F5F5);
   static const gray50 = Color(0xFFFAFAFA);
+
+  static const error = Color(0xFFDC2626);
 }
