@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '../components/section_card.dart';
+import '../components/primary_button.dart';
+import '../components/secondary_button.dart';
+import '../components/app_text_field.dart';
 
 /// Elemento de un bloque mientras se edita. El id permite agregar y quitar
 /// elementos sin que los campos de texto se mezclen.
@@ -72,14 +75,12 @@ class EditBlockPage extends StatelessWidget {
                           child: Row(
                             children: [
                               Expanded(
-                                child: TextFormField(
-                                  key: Key('edit_item_input_$index'),
+                                child: AppTextField(
+                                  fieldKey: Key('edit_item_input_$index'),
                                   initialValue: items[index].text,
                                   onChanged: (value) =>
                                       onItemChanged(items[index].id, value),
-                                  decoration: InputDecoration(
-                                    hintText: 'Elemento ${index + 1}',
-                                  ),
+                                  hintText: 'Elemento ${index + 1}',
                                 ),
                               ),
                               const SizedBox(width: 6),
@@ -110,15 +111,15 @@ class EditBlockPage extends StatelessWidget {
                   spacing: 10,
                   runSpacing: 10,
                   children: [
-                    OutlinedButton(
+                    SecondaryButton(
                       onPressed: onCancel,
-                      child: const Text('Cancelar'),
+                      label: 'Cancelar',
                     ),
-                    ElevatedButton.icon(
-                      key: const Key('save_block_button'),
+                    PrimaryButton(
+                      buttonKey: const Key('save_block_button'),
                       onPressed: onSave,
-                      icon: const Icon(Icons.check_rounded, size: 18),
-                      label: const Text('Guardar cambios'),
+                      icon: Icons.check_rounded,
+                      label: 'Guardar cambios',
                     ),
                   ],
                 ),

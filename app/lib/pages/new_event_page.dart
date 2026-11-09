@@ -5,8 +5,12 @@ import '../utils/date_formatters.dart';
 import '../models/event.dart';
 import '../components/section_card.dart';
 import '../components/step_indicator.dart';
+import '../components/primary_button.dart';
+import '../components/secondary_button.dart';
+import '../components/app_text_field.dart';
 
 class NewEventPage extends StatelessWidget {
+  final bool isEditing;
   final String name;
   final String attendees;
   final EventCategory? category;
@@ -26,6 +30,7 @@ class NewEventPage extends StatelessWidget {
 
   const NewEventPage({
     super.key,
+    this.isEditing = false,
     required this.name,
     required this.attendees,
     required this.category,
@@ -55,18 +60,20 @@ class NewEventPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const StepIndicator(
-                  currentStep: 1,
-                  labels: [
-                    'Características',
-                    'Bloques sugeridos',
-                    'Fechas sugeridas',
-                  ],
-                ),
-                const SizedBox(height: 24),
-                const Text(
-                  'Describe el nuevo evento',
-                  style: TextStyle(
+                if (!isEditing) ...[
+                  const StepIndicator(
+                    currentStep: 1,
+                    labels: [
+                      'Características',
+                      'Bloques sugeridos',
+                      'Fechas sugeridas',
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                ],
+                Text(
+                  isEditing ? 'Editar evento' : 'Describe el nuevo evento',
+                  style: const TextStyle(
                     color: AppColors.black,
                     fontSize: 24,
                     fontWeight: FontWeight.w900,
@@ -74,22 +81,26 @@ class NewEventPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
-                  'Estos datos permiten buscar eventos similares y preparar la configuración sugerida.',
-                  style: TextStyle(
+                Text(
+                  isEditing
+                      ? 'Modifica las características del evento y guarda los cambios.'
+                      : 'Estos datos permiten buscar eventos similares y preparar la configuración sugerida.',
+                  style: const TextStyle(
                     color: AppColors.gray600,
                     fontSize: 13.5,
                     height: 1.45,
                   ),
                 ),
                 const SizedBox(height: 20),
-                _BaseEventSection(
-                  baseEvent: baseEvent,
-                  availableEvents: availableEvents,
-                  onChanged: onBaseEventChanged,
-                  onClear: onClearBase,
-                ),
-                const SizedBox(height: 16),
+                if (!isEditing) ...[
+                  _BaseEventSection(
+                    baseEvent: baseEvent,
+                    availableEvents: availableEvents,
+                    onChanged: onBaseEventChanged,
+                    onClear: onClearBase,
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 SectionCard(
                   icon: Icons.event_note_outlined,
                   title: 'Características del evento',
@@ -97,16 +108,14 @@ class NewEventPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      TextFormField(
-                        key: const Key('event_name_input'),
+                      AppTextField(
+                        fieldKey: const Key('event_name_input'),
                         initialValue: name,
                         onChanged: onNameChanged,
                         textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'Nombre del evento *',
-                          hintText: 'Ej. Congreso de Innovación 2026',
-                          prefixIcon: Icon(Icons.title_outlined),
-                        ),
+                        labelText: 'Nombre del evento *',
+                        hintText: 'Ej. Congreso de Innovación 2026',
+                        prefixIcon: Icons.title_outlined,
                       ),
                       const SizedBox(height: 14),
                       LayoutBuilder(
@@ -178,17 +187,15 @@ class NewEventPage extends StatelessWidget {
                       LayoutBuilder(
                         builder: (context, constraints) {
                           final isWide = constraints.maxWidth >= 560;
-                          final attendeesField = TextFormField(
-                            key: const Key('event_attendees_input'),
+                          final attendeesField = AppTextField(
+                            fieldKey: const Key('event_attendees_input'),
                             initialValue: attendees,
                             onChanged: onAttendeesChanged,
                             keyboardType: TextInputType.number,
                             textInputAction: TextInputAction.next,
-                            decoration: const InputDecoration(
-                              labelText: 'Número de asistentes *',
-                              hintText: 'Ej. 250',
-                              prefixIcon: Icon(Icons.people_outline),
-                            ),
+                            labelText: 'Número de asistentes *',
+                            hintText: 'Ej. 250',
+                            prefixIcon: Icons.people_outline,
                           );
                           final dateField = _DateField(
                             date: date,
@@ -232,29 +239,32 @@ class NewEventPage extends StatelessWidget {
                   spacing: 10,
                   runSpacing: 10,
                   children: [
-                    OutlinedButton(
-                      key: const Key('cancel_event_button'),
+                    SecondaryButton(
+                      buttonKey: const Key('cancel_event_button'),
                       onPressed: onCancel,
-                      child: const Text('Cancelar'),
+                      label: 'Cancelar',
                     ),
-                    ElevatedButton.icon(
-                      key: const Key('save_event_button'),
+                    PrimaryButton(
+                      buttonKey: const Key('save_event_button'),
                       onPressed: onSave,
-                      icon: const Icon(Icons.arrow_forward_rounded, size: 18),
-                      label: const Text('Siguiente'),
+                      icon: isEditing
+                          ? Icons.check_rounded
+                          : Icons.arrow_forward_rounded,
+                      label: isEditing ? 'Guardar cambios' : 'Siguiente',
                     ),
                   ],
                 ),
                 const SizedBox(height: 14),
-                const Text(
-                  'En el siguiente paso verás los bloques sugeridos a partir de eventos similares.',
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    color: AppColors.gray500,
-                    fontSize: 11,
-                    height: 1.4,
+                if (!isEditing)
+                  const Text(
+                    'En el siguiente paso verás los bloques sugeridos a partir de eventos similares.',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      color: AppColors.gray500,
+                      fontSize: 11,
+                      height: 1.4,
+                    ),
                   ),
-                ),
               ],
             ),
           ),

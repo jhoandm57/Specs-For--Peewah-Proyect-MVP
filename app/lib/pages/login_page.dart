@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '../models/auth_user.dart';
+import '../components/primary_button.dart';
+import '../components/app_text_field.dart';
 
 class LoginPage extends StatelessWidget {
   final String email;
@@ -84,48 +86,44 @@ class LoginPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      TextFormField(
-                        key: const Key('email_input'),
+                      AppTextField(
+                        fieldKey: const Key('email_input'),
                         initialValue: email,
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
                         onChanged: onEmailChanged,
-                        decoration: const InputDecoration(
-                          labelText: 'Correo electrónico',
-                          hintText: 'tu.correo@organizacion.com',
-                          prefixIcon: Icon(Icons.email_outlined),
-                        ),
+                        labelText: 'Correo electrónico',
+                        hintText: 'tu.correo@organizacion.com',
+                        prefixIcon: Icons.email_outlined,
                       ),
                       const SizedBox(height: 14),
-                      TextFormField(
-                        key: const Key('password_input'),
+                      AppTextField(
+                        fieldKey: const Key('password_input'),
                         initialValue: password,
                         obscureText: obscurePassword,
                         textInputAction: TextInputAction.done,
                         onChanged: onPasswordChanged,
-                        onFieldSubmitted: (_) => onLogin(),
-                        decoration: InputDecoration(
-                          labelText: 'Contraseña',
-                          hintText: '••••••••',
-                          prefixIcon: const Icon(Icons.lock_outline),
-                          suffixIcon: IconButton(
-                            tooltip: obscurePassword
-                                ? 'Mostrar contraseña'
-                                : 'Ocultar contraseña',
-                            onPressed: onTogglePassword,
-                            icon: Icon(
-                              obscurePassword
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                            ),
+                        labelText: 'Contraseña',
+                        hintText: '••••••••',
+                        prefixIcon: Icons.lock_outline,
+                        suffixIcon: IconButton(
+                          tooltip: obscurePassword
+                              ? 'Mostrar contraseña'
+                              : 'Ocultar contraseña',
+                          onPressed: onTogglePassword,
+                          icon: Icon(
+                            obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
                           ),
                         ),
                       ),
                       const SizedBox(height: 18),
-                      ElevatedButton(
-                        key: const Key('login_button'),
+                      PrimaryButton(
+                        buttonKey: const Key('login_button'),
+                        label: 'Iniciar sesión',
+                        isFullWidth: true,
                         onPressed: onLogin,
-                        child: const Text('Iniciar sesión'),
                       ),
                     ],
                   ),

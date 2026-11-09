@@ -9,17 +9,23 @@ import '../components/recommendation_block_card.dart';
 import '../components/section_card.dart';
 import '../components/status_badge.dart';
 import '../components/suggested_date_card.dart';
+import '../components/primary_button.dart';
+import '../components/secondary_button.dart';
 
 class EventDetailPage extends StatelessWidget {
   final Event event;
   final AuthUser user;
   final VoidCallback onUseAsBase;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   const EventDetailPage({
     super.key,
     required this.event,
     required this.user,
     required this.onUseAsBase,
+    this.onEdit,
+    this.onDelete,
   });
 
   @override
@@ -37,8 +43,10 @@ class EventDetailPage extends StatelessWidget {
               children: [
                 _SummaryCard(
                   event: event,
-                  canUseAsBase: user.isAdmin,
+                  canManage: user.isAdmin,
                   onUseAsBase: onUseAsBase,
+                  onEdit: onEdit,
+                  onDelete: onDelete,
                 ),
                 const SizedBox(height: 18),
                 LayoutBuilder(
@@ -101,13 +109,17 @@ class EventDetailPage extends StatelessWidget {
 
 class _SummaryCard extends StatelessWidget {
   final Event event;
-  final bool canUseAsBase;
+  final bool canManage;
   final VoidCallback onUseAsBase;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   const _SummaryCard({
     required this.event,
-    required this.canUseAsBase,
+    required this.canManage,
     required this.onUseAsBase,
+    this.onEdit,
+    this.onDelete,
   });
 
   @override
@@ -194,13 +206,32 @@ class _SummaryCard extends StatelessWidget {
               ],
             ),
           ],
-          if (canUseAsBase) ...[
+          if (canManage) ...[
             const SizedBox(height: 16),
-            ElevatedButton.icon(
-              key: const Key('use_as_base_detail'),
-              onPressed: onUseAsBase,
-              icon: const Icon(Icons.copy_all_outlined, size: 18),
-              label: const Text('Usar como base'),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                PrimaryButton(
+                  buttonKey: const Key('edit_event_button'),
+                  label: 'Editar',
+                  icon: Icons.edit_outlined,
+                  onPressed: onEdit,
+                ),
+                SecondaryButton(
+                  buttonKey: const Key('use_as_base_detail'),
+                  label: 'Usar como base',
+                  icon: Icons.copy_all_outlined,
+                  onPressed: onUseAsBase,
+                ),
+                SecondaryButton(
+                  buttonKey: const Key('delete_event_button'),
+                  label: 'Eliminar',
+                  icon: Icons.delete_outline_rounded,
+                  isDestructive: true,
+                  onPressed: onDelete,
+                ),
+              ],
             ),
           ],
         ],

@@ -5,6 +5,8 @@ import '../models/event.dart';
 import '../components/recommendation_block_card.dart';
 import '../components/section_card.dart';
 import '../components/step_indicator.dart';
+import '../components/primary_button.dart';
+import '../components/secondary_button.dart';
 
 /// Paso 2 del asistente (F-04): muestra los bloques sugeridos y reporta las
 /// decisiones a la Screen. No guarda datos por su cuenta.
@@ -131,16 +133,16 @@ class RecommendationPage extends StatelessWidget {
                   spacing: 10,
                   runSpacing: 10,
                   children: [
-                    OutlinedButton(
-                      key: const Key('recommendation_back_button'),
+                    SecondaryButton(
+                      buttonKey: const Key('recommendation_back_button'),
                       onPressed: onBack,
-                      child: const Text('Atrás'),
+                      label: 'Atrás',
                     ),
-                    ElevatedButton.icon(
-                      key: const Key('recommendation_next_button'),
+                    PrimaryButton(
+                      buttonKey: const Key('recommendation_next_button'),
                       onPressed: loading ? null : onNext,
-                      icon: const Icon(Icons.arrow_forward_rounded, size: 18),
-                      label: const Text('Siguiente'),
+                      icon: Icons.arrow_forward_rounded,
+                      label: 'Siguiente',
                     ),
                   ],
                 ),
