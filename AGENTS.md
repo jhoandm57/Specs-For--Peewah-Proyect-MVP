@@ -36,26 +36,13 @@ inscripciones y los recordatorios.
 
 ## Estructura actual
 
-Todavía no hay código: no existe `lib/` ni proyecto Flutter. Por ahora el repositorio tiene:
+El prototipo Flutter se ejecuta desde app/ y comienza en app/lib/main.dart.
+La interfaz se divide en screens/, pages/, components/ y theme/. Los modelos
+están en models/. Los datos simulados viven en data/ y la lógica de sesión
+en domain/ y state/. Las pruebas viven en app/test/.
 
-```
-AGENTS.md                 este archivo
-README.md
-.agents/skills/           skills de Spec Driven Development
-  sdd-prd/                entrevista y escribe docs/prd.md
-  sdd-requisitos/         saca RF y RNF del PRD a docs/requisitos.md
-  sdd-arquitectura/       escribe la architectural spine (Flutter + Supabase)
-  sdd-specs/              escribe una spec por funcionalidad en docs/specs/
-  sdd-critica/            revisa el conjunto de specs con métricas
-docs/
-  prd.md                  PRD
-  requisitos.md           requisitos funcionales y no funcionales
-  architectural_spine.md  reglas de arquitectura
-  modelo.md               tablas y relaciones de la base de datos
-  specs/                  una spec por funcionalidad, README.md (índice) y reporte.md
-```
-
-Cuando se cree la app, actualiza esta sección con la estructura de `lib/`.
+Para ejecutar en web, desde app/: flutter run -d chrome.
+Para probar, desde app/: flutter test.
 
 ## Documentos
 
