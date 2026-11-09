@@ -7,6 +7,8 @@ import '../components/section_card.dart';
 import '../components/status_badge.dart';
 import '../components/recommendation_block_card.dart';
 import '../components/suggested_date_card.dart';
+import '../components/primary_button.dart';
+import '../components/secondary_button.dart';
 
 /// Página presentacional del resumen de confirmación del evento (F-06).
 class ConfirmEventPage extends StatelessWidget {
@@ -207,25 +209,17 @@ class _ConfirmationBottomNav extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          OutlinedButton(
-            key: const Key('cancel_confirmation_button'),
+          SecondaryButton(
+            buttonKey: const Key('cancel_confirmation_button'),
             onPressed: isSaving ? null : onCancel,
-            child: const Text('Salir sin guardar'),
+            label: 'Salir sin guardar',
           ),
-          ElevatedButton.icon(
-            key: const Key('confirm_event_button'),
+          PrimaryButton(
+            buttonKey: const Key('confirm_event_button'),
             onPressed: isSaving ? null : onConfirm,
-            icon: isSaving
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: AppColors.white,
-                    ),
-                  )
-                : const Icon(Icons.check_circle_outline_rounded, size: 18),
-            label: Text(isSaving ? 'Guardando…' : 'Confirmar evento'),
+            isLoading: isSaving,
+            icon: Icons.check_circle_outline_rounded,
+            label: 'Confirmar evento',
           ),
         ],
       ),

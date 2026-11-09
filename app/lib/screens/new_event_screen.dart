@@ -6,13 +6,24 @@ import '../models/event.dart';
 import '../pages/new_event_page.dart';
 import 'recommendation_screen.dart';
 
-/// Screen anfitriona del formulario de nuevo evento (F-03).
-/// El estado del formulario vive aquí; la página solo dibuja y reporta.
+/// Screen anfitriona del formulario de evento (F-03).
+/// Soporta tanto la creación de un nuevo evento en el paso 1 del asistente
+/// como la edición de un evento ya existente.
 class NewEventScreen extends StatefulWidget {
   final AuthUser user;
   final Event? baseEvent;
+  final Event? eventToEdit;
+  final ValueChanged<Event>? onEventCreated;
+  final ValueChanged<Event>? onEventUpdated;
 
-  const NewEventScreen({super.key, required this.user, this.baseEvent});
+  const NewEventScreen({
+    super.key,
+    required this.user,
+    this.baseEvent,
+    this.eventToEdit,
+    this.onEventCreated,
+    this.onEventUpdated,
+  });
 
   @override
   State<NewEventScreen> createState() => _NewEventScreenState();
@@ -35,7 +46,17 @@ class _NewEventScreenState extends State<NewEventScreen> {
   @override
   void initState() {
     super.initState();
-    _applyBaseEvent(widget.baseEvent);
+    if (widget.eventToEdit != null) {
+      final ev = widget.eventToEdit!;
+      _name = ev.name;
+      _attendees = ev.estimatedAttendees.toString();
+      _category = ev.category;
+      _modality = ev.modality;
+      _date = ev.date;
+      _baseEvent = null;
+    } else {
+      _applyBaseEvent(widget.baseEvent);
+    }
   }
 
   void _applyBaseEvent(Event? event) {
@@ -83,6 +104,19 @@ class _NewEventScreenState extends State<NewEventScreen> {
   }
 
   void _save() {
+    if (widget.eventToEdit != null) {
+      final updated = widget.eventToEdit!.copyWith(
+        name: _name.trim().isEmpty ? 'Nuevo evento sin título' : _name.trim(),
+        category: _category,
+        modality: _modality,
+        estimatedAttendees: int.tryParse(_attendees) ?? widget.eventToEdit!.estimatedAttendees,
+        date: _date,
+      );
+      widget.onEventUpdated?.call(updated);
+      Navigator.of(context).pop(updated);
+      return;
+    }
+
     final draft = buildMockEventFromForm(
       name: _name,
       category: _category,
@@ -98,6 +132,7 @@ class _NewEventScreenState extends State<NewEventScreen> {
           user: widget.user,
           draft: draft,
           baseEvent: _baseEvent,
+          onEventCreated: widget.onEventCreated,
         ),
       ),
     );
@@ -105,14 +140,16 @@ class _NewEventScreenState extends State<NewEventScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.eventToEdit != null;
+
     if (!widget.user.isAdmin) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Nuevo evento')),
+        appBar: AppBar(title: Text(isEditing ? 'Editar evento' : 'Nuevo evento')),
         body: const Center(
           child: Padding(
             padding: EdgeInsets.all(24),
             child: Text(
-              'Solo un administrador puede crear eventos.',
+              'Solo un administrador puede configurar eventos.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color(0xFF000000),
@@ -127,13 +164,15 @@ class _NewEventScreenState extends State<NewEventScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Nuevo evento'),
+            Text(isEditing ? 'Editar evento' : 'Nuevo evento'),
             Text(
-              'Paso 1 de 3 · Características',
-              style: TextStyle(
+              isEditing
+                  ? 'Modificar características'
+                  : 'Paso 1 de 3 · Características',
+              style: const TextStyle(
                 color: Color(0xFF737373),
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
@@ -143,6 +182,7 @@ class _NewEventScreenState extends State<NewEventScreen> {
         ),
       ),
       body: NewEventPage(
+        isEditing: isEditing,
         name: _name,
         attendees: _attendees,
         category: _category,

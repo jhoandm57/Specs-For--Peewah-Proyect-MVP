@@ -20,6 +20,7 @@ class RecommendationScreen extends StatefulWidget {
 
   /// Tiempo simulado de búsqueda de eventos similares.
   final Duration searchDelay;
+  final ValueChanged<Event>? onEventCreated;
 
   const RecommendationScreen({
     super.key,
@@ -27,6 +28,7 @@ class RecommendationScreen extends StatefulWidget {
     required this.draft,
     this.baseEvent,
     this.searchDelay = const Duration(milliseconds: 600),
+    this.onEventCreated,
   });
 
   @override
@@ -120,6 +122,7 @@ class _RecommendationScreenState extends State<RecommendationScreen> {
           user: widget.user,
           draft: event,
           baseEvent: widget.baseEvent,
+          onEventCreated: widget.onEventCreated,
         ),
       ),
     );

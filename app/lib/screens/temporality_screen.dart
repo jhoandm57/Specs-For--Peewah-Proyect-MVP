@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../components/primary_button.dart';
+import '../components/secondary_button.dart';
+import '../components/app_text_field.dart';
 import '../models/auth_user.dart';
 import '../data/mock_events.dart';
 import '../data/mock_recommendations.dart';
@@ -16,6 +19,7 @@ class TemporalityScreen extends StatefulWidget {
   final Event? baseEvent;
   final Duration delay;
   final DateTime? simulatedNow;
+  final ValueChanged<Event>? onEventCreated;
 
   const TemporalityScreen({
     super.key,
@@ -24,6 +28,7 @@ class TemporalityScreen extends StatefulWidget {
     this.baseEvent,
     this.delay = const Duration(milliseconds: 500),
     this.simulatedNow,
+    this.onEventCreated,
   });
 
   @override
@@ -186,30 +191,27 @@ class _TemporalityScreenState extends State<TemporalityScreen> {
               ),
               const SizedBox(height: 12),
             ],
-            TextField(
-              key: const Key('edit_days_input'),
+            AppTextField(
+              fieldKey: const Key('edit_days_input'),
               controller: controller,
               keyboardType: TextInputType.number,
-              autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Días antes del evento',
-                hintText: 'Ej. 30',
-              ),
+              labelText: 'Días antes del evento',
+              hintText: 'Ej. 30',
             ),
           ],
         ),
         actions: [
-          TextButton(
+          SecondaryButton(
+            label: 'Cancelar',
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancelar'),
           ),
-          ElevatedButton(
-            key: const Key('save_days_dialog_button'),
+          PrimaryButton(
+            buttonKey: const Key('save_days_dialog_button'),
+            label: 'Guardar',
             onPressed: () {
               final parsed = int.tryParse(controller.text.trim());
               Navigator.of(context).pop(parsed);
             },
-            child: const Text('Guardar'),
           ),
         ],
       ),
@@ -254,6 +256,7 @@ class _TemporalityScreenState extends State<TemporalityScreen> {
           user: widget.user,
           draft: eventWithDates,
           baseEvent: widget.baseEvent,
+          onEventCreated: widget.onEventCreated,
         ),
       ),
     );

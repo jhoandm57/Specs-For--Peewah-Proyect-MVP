@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'theme/app_theme.dart';
 import 'screens/login_screen.dart';
+import 'screens/gallery_screen.dart';
 import 'screens/event_card_preview_screen.dart';
 
 void main() {
@@ -29,6 +30,7 @@ class PeewahApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginScreen(),
+        '/galeria': (context) => const GalleryScreen(),
         '/vista-previa/tarjeta': (_) => const EventCardPreview(),
       },
     );

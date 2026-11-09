@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../components/confirm_dialog.dart';
 import '../models/auth_user.dart';
 import '../data/mock_events.dart';
 import '../models/event.dart';
@@ -12,12 +13,14 @@ class ConfirmEventScreen extends StatefulWidget {
   final AuthUser user;
   final Event draft;
   final Event? baseEvent;
+  final ValueChanged<Event>? onEventCreated;
 
   const ConfirmEventScreen({
     super.key,
     required this.user,
     required this.draft,
     this.baseEvent,
+    this.onEventCreated,
   });
 
   @override
@@ -28,24 +31,15 @@ class _ConfirmEventScreenState extends State<ConfirmEventScreen> {
   var _isSaving = false;
 
   Future<bool> _promptExitWithoutSaving() async {
-    final exit = await showDialog<bool>(
+    final exit = await ConfirmDialog.show(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('¿Salir sin guardar?'),
-        content: const Text('Se perderá lo que no confirmaste'),
-        actions: [
-          TextButton(
-            key: const Key('continue_editing_button'),
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Continuar editando'),
-          ),
-          ElevatedButton(
-            key: const Key('confirm_exit_without_saving'),
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Salir sin guardar'),
-          ),
-        ],
-      ),
+      title: '¿Salir sin guardar?',
+      message: 'Se perderá lo que no confirmaste',
+      confirmLabel: 'Salir sin guardar',
+      cancelLabel: 'Continuar editando',
+      isDestructive: true,
+      confirmKey: const Key('confirm_exit_without_saving'),
+      cancelKey: const Key('continue_editing_button'),
     );
 
     if (exit == true && mounted) {
@@ -77,9 +71,12 @@ class _ConfirmEventScreenState extends State<ConfirmEventScreen> {
       recommendation: widget.draft.recommendation,
     );
 
-    // Persistencia en memoria (reflejada de inmediato en la app)
+    // Persistencia en memoria
     mockEvents.removeWhere((e) => e.id == configuredEvent.id);
     mockEvents.insert(0, configuredEvent);
+
+    // Notifica a EventsScreen
+    widget.onEventCreated?.call(configuredEvent);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -93,6 +90,13 @@ class _ConfirmEventScreenState extends State<ConfirmEventScreen> {
         builder: (_) => EventDetailScreen(
           event: configuredEvent,
           user: widget.user,
+          onEventUpdated: (updated) {
+            mockEvents.removeWhere((e) => e.id == updated.id);
+            mockEvents.insert(0, updated);
+          },
+          onEventDeleted: (deletedId) {
+            mockEvents.removeWhere((e) => e.id == deletedId);
+          },
         ),
       ),
       (route) => route.isFirst,

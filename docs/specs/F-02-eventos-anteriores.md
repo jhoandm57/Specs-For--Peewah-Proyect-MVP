@@ -3,7 +3,7 @@ id: F-02
 titulo: Consultar eventos anteriores
 version: 0.2.0
 fecha: 2026-11-06
-estado: borrador
+estado: implementada
 autores: [Juan Felipe Castro Reyes]
 requisitos: [RF-02]
 depende_de: [F-01]

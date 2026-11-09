@@ -7,6 +7,8 @@ import '../utils/date_formatters.dart';
 import '../components/empty_state.dart';
 import '../components/event_card.dart';
 import '../components/status_badge.dart';
+import '../components/primary_button.dart';
+import '../components/secondary_button.dart';
 
 class EventsPage extends StatelessWidget {
   final AuthUser user;
@@ -17,6 +19,7 @@ class EventsPage extends StatelessWidget {
   final ValueChanged<Event> onUseAsBase;
   final VoidCallback onNewEvent;
   final VoidCallback onLogout;
+  final VoidCallback? onOpenGallery;
 
   const EventsPage({
     super.key,
@@ -28,6 +31,7 @@ class EventsPage extends StatelessWidget {
     required this.onUseAsBase,
     required this.onNewEvent,
     required this.onLogout,
+    this.onOpenGallery,
   });
 
   @override
@@ -41,7 +45,11 @@ class EventsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _SessionCard(user: user, onLogout: onLogout),
+                _SessionCard(
+                  user: user,
+                  onLogout: onLogout,
+                  onOpenGallery: onOpenGallery,
+                ),
                 const SizedBox(height: 24),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -94,10 +102,11 @@ class EventsPage extends StatelessWidget {
                         ? 'Cuando configures el primer evento, aparecerá en esta lista.'
                         : 'Prueba con otra categoría o vuelve a ver todos los eventos.',
                     action: user.isAdmin && selectedCategory == null
-                        ? ElevatedButton.icon(
+                        ? PrimaryButton(
+                            buttonKey: const Key('empty_state_new_event'),
                             onPressed: onNewEvent,
-                            icon: const Icon(Icons.add_rounded, size: 18),
-                            label: const Text('Crear evento'),
+                            icon: Icons.add_rounded,
+                            label: 'Crear evento',
                           )
                         : null,
                   )
@@ -122,8 +131,13 @@ class EventsPage extends StatelessWidget {
 class _SessionCard extends StatelessWidget {
   final AuthUser user;
   final VoidCallback onLogout;
+  final VoidCallback? onOpenGallery;
 
-  const _SessionCard({required this.user, required this.onLogout});
+  const _SessionCard({
+    required this.user,
+    required this.onLogout,
+    this.onOpenGallery,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -191,11 +205,25 @@ class _SessionCard extends StatelessWidget {
           const SizedBox(height: 12),
           Align(
             alignment: Alignment.centerRight,
-            child: OutlinedButton.icon(
-              key: const Key('logout_button'),
-              onPressed: onLogout,
-              icon: const Icon(Icons.logout_rounded, size: 17),
-              label: const Text('Cerrar sesión'),
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              alignment: WrapAlignment.end,
+              children: [
+                if (onOpenGallery != null)
+                  SecondaryButton(
+                    buttonKey: const Key('session_gallery_button'),
+                    label: 'Galería',
+                    icon: Icons.palette_outlined,
+                    onPressed: onOpenGallery,
+                  ),
+                SecondaryButton(
+                  buttonKey: const Key('logout_button'),
+                  label: 'Cerrar sesión',
+                  icon: Icons.logout_rounded,
+                  onPressed: onLogout,
+                ),
+              ],
             ),
           ),
         ],

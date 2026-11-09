@@ -5,6 +5,8 @@ import '../models/event.dart';
 import '../components/section_card.dart';
 import '../components/step_indicator.dart';
 import '../components/suggested_date_card.dart';
+import '../components/primary_button.dart';
+import '../components/secondary_button.dart';
 
 /// Página presentacional del paso 3 del flujo guiado (F-05).
 /// Solo recibe datos y emite eventos hacia la screen anfitriona.
@@ -290,17 +292,17 @@ class _BottomNav extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          OutlinedButton.icon(
-            key: const Key('temporality_back_button'),
+          SecondaryButton(
+            buttonKey: const Key('temporality_back_button'),
             onPressed: onBack,
-            icon: const Icon(Icons.arrow_back_rounded, size: 16),
-            label: const Text('Atrás'),
+            icon: Icons.arrow_back_rounded,
+            label: 'Atrás',
           ),
-          ElevatedButton.icon(
-            key: const Key('temporality_next_button'),
+          PrimaryButton(
+            buttonKey: const Key('temporality_next_button'),
             onPressed: onNext,
-            icon: const Icon(Icons.arrow_forward_rounded, size: 16),
-            label: const Text('Siguiente'),
+            icon: Icons.arrow_forward_rounded,
+            label: 'Siguiente',
           ),
         ],
       ),
