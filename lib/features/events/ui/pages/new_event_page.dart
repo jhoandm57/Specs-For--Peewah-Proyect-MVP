@@ -241,13 +241,13 @@ class NewEventPage extends StatelessWidget {
                       key: const Key('save_event_button'),
                       onPressed: onSave,
                       icon: const Icon(Icons.arrow_forward_rounded, size: 18),
-                      label: const Text('Siguiente / Guardar'),
+                      label: const Text('Siguiente'),
                     ),
                   ],
                 ),
                 const SizedBox(height: 14),
                 const Text(
-                  'Al guardar se abrirá el detalle del evento con datos simulados. La persistencia se conecta en la siguiente iteración.',
+                  'En el siguiente paso verás los bloques sugeridos a partir de eventos similares.',
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     color: AppColors.gray500,

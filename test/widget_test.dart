@@ -135,7 +135,7 @@ void main() {
     expect(find.text('Registro de decisiones'), findsOneWidget);
   });
 
-  testWidgets('Administrador: crear evento y abrir su detalle',
+  testWidgets('Administrador: crear evento, decidir bloques y abrir su detalle',
       (tester) async {
     await _loginAsAdmin(tester);
 
@@ -173,6 +173,21 @@ void main() {
     await tester.ensureVisible(saveButton);
     await tester.pumpAndSettle();
     await tester.tap(saveButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Revisa los bloques sugeridos'), findsOneWidget);
+    for (final type in ['formulario', 'cronograma', 'tareas']) {
+      final accept = find.byKey(Key('accept_$type'));
+      await tester.ensureVisible(accept);
+      await tester.pumpAndSettle();
+      await tester.tap(accept);
+      await tester.pumpAndSettle();
+    }
+
+    final nextButton = find.byKey(const Key('recommendation_next_button'));
+    await tester.ensureVisible(nextButton);
+    await tester.pumpAndSettle();
+    await tester.tap(nextButton);
     await tester.pumpAndSettle();
 
     expect(find.text('Detalle del evento'), findsOneWidget);

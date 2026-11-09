@@ -5,6 +5,7 @@ import '../../../../core/utils/date_formatters.dart';
 import '../../../auth/domain/entities/auth_user.dart';
 import '../../domain/entities/event.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/recommendation_block_card.dart';
 import '../widgets/section_card.dart';
 import '../widgets/status_badge.dart';
 
@@ -333,7 +334,7 @@ class _RecommendationsSection extends StatelessWidget {
             )
           else
             for (final block in recommendation.blocks)
-              _RecommendationBlockCard(block: block),
+              RecommendationBlockCard(block: block),
           const Divider(height: 28),
           _SubsectionTitle(
             icon: Icons.history_toggle_off_rounded,
@@ -569,84 +570,6 @@ class _TaskRow extends StatelessWidget {
   }
 }
 
-class _RecommendationBlockCard extends StatelessWidget {
-  final RecommendationBlock block;
-
-  const _RecommendationBlockCard({required this.block});
-
-  @override
-  Widget build(BuildContext context) {
-    final isEdited = block.decision == RecommendationDecision.editado;
-    final isRejected = block.decision == RecommendationDecision.rechazado;
-
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.gray50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.gray200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  block.type.label,
-                  style: const TextStyle(
-                    color: AppColors.black,
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w800,
-                    height: 1.3,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              StatusBadge(
-                label: block.decision.label,
-                filled: block.decision == RecommendationDecision.aceptado,
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          if (isRejected)
-            const _MutedText(
-              'Bloque rechazado. No se incluyó en la configuración final.',
-            )
-          else ...[
-            if (isEdited) ...[
-              const _MiniLabel('Contenido sugerido'),
-              const SizedBox(height: 4),
-              _BulletList(items: block.suggestedItems),
-              const SizedBox(height: 8),
-              const _MiniLabel('Contenido final'),
-              const SizedBox(height: 4),
-              _BulletList(items: block.finalItems),
-            ] else
-              _BulletList(items: block.suggestedItems),
-          ],
-          if (block.originEvents.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text(
-              'Basado en: ${block.originEvents.join(', ')}',
-              style: const TextStyle(
-                color: AppColors.gray500,
-                fontSize: 10.5,
-                height: 1.35,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
 class _DecisionRow extends StatelessWidget {
   final String title;
   final RecommendationDecision decision;
@@ -772,72 +695,6 @@ class _SuggestedDateRow extends StatelessWidget {
             ),
           ],
         ],
-      ),
-    );
-  }
-}
-
-class _BulletList extends StatelessWidget {
-  final List<String> items;
-
-  const _BulletList({required this.items});
-
-  @override
-  Widget build(BuildContext context) {
-    if (items.isEmpty) {
-      return const _MutedText('Sin contenido registrado.');
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (final item in items)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 3),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Icon(
-                    Icons.circle,
-                    size: 4,
-                    color: AppColors.gray500,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    item,
-                    style: const TextStyle(
-                      color: AppColors.gray600,
-                      fontSize: 11.5,
-                      height: 1.35,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _MiniLabel extends StatelessWidget {
-  final String text;
-
-  const _MiniLabel(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text.toUpperCase(),
-      style: const TextStyle(
-        color: AppColors.gray500,
-        fontSize: 9.5,
-        fontWeight: FontWeight.w800,
-        letterSpacing: 0.6,
       ),
     );
   }

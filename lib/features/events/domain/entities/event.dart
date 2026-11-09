@@ -103,6 +103,46 @@ class RecommendationBlock {
     this.finalItems = const [],
     this.originEvents = const [],
   });
+
+  /// El bloque queda aceptado con el contenido que sugirió el sistema.
+  RecommendationBlock accept() => copyWith(
+        decision: RecommendationDecision.aceptado,
+        finalItems: suggestedItems,
+      );
+
+  /// El bloque queda editado; se conserva aparte lo que sugirió el sistema.
+  RecommendationBlock edit(List<String> items) => copyWith(
+        decision: RecommendationDecision.editado,
+        finalItems: items,
+      );
+
+  /// El bloque queda vacío y marcado como rechazado.
+  RecommendationBlock reject() => copyWith(
+        decision: RecommendationDecision.rechazado,
+        finalItems: const [],
+      );
+
+  /// Contenido con el que el bloque entra a la configuración del evento.
+  List<String> get currentItems => switch (decision) {
+        RecommendationDecision.editado => finalItems,
+        RecommendationDecision.rechazado => const [],
+        _ => suggestedItems,
+      };
+
+  RecommendationBlock copyWith({
+    RecommendationDecision? decision,
+    List<String>? suggestedItems,
+    List<String>? finalItems,
+    List<String>? originEvents,
+  }) {
+    return RecommendationBlock(
+      type: type,
+      decision: decision ?? this.decision,
+      suggestedItems: suggestedItems ?? this.suggestedItems,
+      finalItems: finalItems ?? this.finalItems,
+      originEvents: originEvents ?? this.originEvents,
+    );
+  }
 }
 
 class SuggestedDate {
@@ -129,6 +169,17 @@ class EventRecommendation {
     required this.dates,
     this.simulated = true,
   });
+
+  EventRecommendation copyWith({
+    List<RecommendationBlock>? blocks,
+    List<SuggestedDate>? dates,
+  }) {
+    return EventRecommendation(
+      blocks: blocks ?? this.blocks,
+      dates: dates ?? this.dates,
+      simulated: simulated,
+    );
+  }
 }
 
 class Event {
@@ -161,4 +212,27 @@ class Event {
     required this.recommendation,
     this.baseEventName,
   });
+
+  Event copyWith({
+    List<RegistrationField>? registrationFields,
+    List<ScheduleActivity>? schedule,
+    List<EventTask>? tasks,
+    EventRecommendation? recommendation,
+  }) {
+    return Event(
+      id: id,
+      organizationId: organizationId,
+      name: name,
+      category: category,
+      modality: modality,
+      estimatedAttendees: estimatedAttendees,
+      date: date,
+      status: status,
+      baseEventName: baseEventName,
+      registrationFields: registrationFields ?? this.registrationFields,
+      schedule: schedule ?? this.schedule,
+      tasks: tasks ?? this.tasks,
+      recommendation: recommendation ?? this.recommendation,
+    );
+  }
 }

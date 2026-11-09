@@ -4,7 +4,7 @@ import '../../../auth/domain/entities/auth_user.dart';
 import '../../data/mock_events.dart';
 import '../../domain/entities/event.dart';
 import '../pages/new_event_page.dart';
-import 'event_detail_screen.dart';
+import 'recommendation_screen.dart';
 
 /// Screen anfitriona del formulario de nuevo evento (F-03).
 /// El estado del formulario vive aquí; la página solo dibuja y reporta.
@@ -87,7 +87,7 @@ class _NewEventScreenState extends State<NewEventScreen> {
   }
 
   void _save() {
-    final event = buildMockEventFromForm(
+    final draft = buildMockEventFromForm(
       name: _name,
       category: _category,
       modality: _modality,
@@ -96,9 +96,13 @@ class _NewEventScreenState extends State<NewEventScreen> {
       baseEvent: _baseEvent,
     );
 
-    Navigator.of(context).pushReplacement(
+    Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => EventDetailScreen(event: event, user: widget.user),
+        builder: (_) => RecommendationScreen(
+          user: widget.user,
+          draft: draft,
+          baseEvent: _baseEvent,
+        ),
       ),
     );
   }
