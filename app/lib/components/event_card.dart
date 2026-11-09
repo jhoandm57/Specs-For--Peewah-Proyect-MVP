@@ -14,6 +14,9 @@ class EventCard extends StatelessWidget {
     required this.estimatedAttendance,
     required this.onTap,
     this.status = 'Configurado',
+    this.baseEventName,
+    this.baseActionKey,
+    this.onUseAsBase,
   }) : assert(registrations >= 0),
        assert(estimatedAttendance > 0);
 
@@ -27,6 +30,9 @@ class EventCard extends StatelessWidget {
   // Avisa a la pantalla anfitriona cuando se toca la tarjeta.
   final VoidCallback onTap;
   final String status;
+  final String? baseEventName;
+  final Key? baseActionKey;
+  final VoidCallback? onUseAsBase;
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +108,17 @@ class EventCard extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(attendanceLabel, style: const TextStyle(color: muted)),
+              if (baseEventName != null) Text('Base: $baseEventName'),
+              // La pantalla habilita esta acción cuando el usuario puede crear.
+              if (onUseAsBase != null)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: OutlinedButton(
+                    key: baseActionKey,
+                    onPressed: onUseAsBase,
+                    child: const Text('Usar como base'),
+                  ),
+                ),
             ],
           ),
         ),

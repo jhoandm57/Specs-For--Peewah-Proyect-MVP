@@ -1,114 +1,239 @@
-enum EventCategory {
-  congress('Congreso'),
-  fair('Feria'),
-  seminar('Seminario');
+enum EventCategory { congreso, feria, seminario, taller }
 
-  const EventCategory(this.label);
-  final String label;
+extension EventCategoryX on EventCategory {
+  String get label => switch (this) {
+    EventCategory.congreso => 'Congreso',
+    EventCategory.feria => 'Feria',
+    EventCategory.seminario => 'Seminario',
+    EventCategory.taller => 'Taller',
+  };
 }
 
-enum EventModality {
-  onsite('Presencial'),
-  hybrid('Híbrida'),
-  online('Virtual');
+enum EventModality { presencial, virtual, hibrida }
 
-  const EventModality(this.label);
-  final String label;
+extension EventModalityX on EventModality {
+  String get label => switch (this) {
+    EventModality.presencial => 'Presencial',
+    EventModality.virtual => 'Virtual',
+    EventModality.hibrida => 'Híbrida',
+  };
 }
 
-/// Datos de un evento configurado que necesita el listado.
-class Event {
-  Event({
-    required this.id,
+enum EventStatus { configurado, enConfiguracion }
+
+extension EventStatusX on EventStatus {
+  String get label => switch (this) {
+    EventStatus.configurado => 'Configurado',
+    EventStatus.enConfiguracion => 'En configuración',
+  };
+}
+
+enum RecommendationDecision { pendiente, aceptado, editado, rechazado }
+
+extension RecommendationDecisionX on RecommendationDecision {
+  String get label => switch (this) {
+    RecommendationDecision.pendiente => 'Pendiente',
+    RecommendationDecision.aceptado => 'Aceptado',
+    RecommendationDecision.editado => 'Editado',
+    RecommendationDecision.rechazado => 'Rechazado',
+  };
+}
+
+enum RecommendationBlockType { formulario, cronograma, tareas }
+
+extension RecommendationBlockTypeX on RecommendationBlockType {
+  String get label => switch (this) {
+    RecommendationBlockType.formulario => 'Formulario de inscripción',
+    RecommendationBlockType.cronograma => 'Cronograma de actividades',
+    RecommendationBlockType.tareas => 'Tareas operativas',
+  };
+}
+
+enum SuggestedDateType { apertura, recordatorio }
+
+extension SuggestedDateTypeX on SuggestedDateType {
+  String get label => switch (this) {
+    SuggestedDateType.apertura => 'Apertura de inscripciones',
+    SuggestedDateType.recordatorio => 'Recordatorio',
+  };
+}
+
+class RegistrationField {
+  final String name;
+  final bool required;
+
+  const RegistrationField({required this.name, required this.required});
+}
+
+class ScheduleActivity {
+  final String name;
+  final int dayRelative;
+  final String time;
+
+  const ScheduleActivity({
     required this.name,
-    required this.category,
-    required this.modality,
-    required this.date,
-    required this.estimatedAttendance,
-    required this.registrations,
+    required this.dayRelative,
+    required this.time,
+  });
+}
+
+class EventTask {
+  final String name;
+  final String responsible;
+  final int daysBeforeDue;
+
+  const EventTask({
+    required this.name,
+    required this.responsible,
+    required this.daysBeforeDue,
+  });
+}
+
+class RecommendationBlock {
+  final RecommendationBlockType type;
+  final RecommendationDecision decision;
+  final List<String> suggestedItems;
+  final List<String> finalItems;
+  final List<String> originEvents;
+
+  const RecommendationBlock({
+    required this.type,
+    required this.decision,
+    required this.suggestedItems,
+    this.finalItems = const [],
+    this.originEvents = const [],
   });
 
-  final int id;
-  final String name;
-  final EventCategory category;
-  final EventModality modality;
-  final DateTime date;
-  final int estimatedAttendance;
-  final int registrations;
+  /// El bloque queda aceptado con el contenido que sugirió el sistema.
+  RecommendationBlock accept() => copyWith(
+    decision: RecommendationDecision.aceptado,
+    finalItems: suggestedItems,
+  );
 
-  String get dateLabel {
-    const months = [
-      'ene',
-      'feb',
-      'mar',
-      'abr',
-      'may',
-      'jun',
-      'jul',
-      'ago',
-      'sep',
-      'oct',
-      'nov',
-      'dic',
-    ];
-    return '${date.day} ${months[date.month - 1]} ${date.year}';
+  /// El bloque queda editado; se conserva aparte lo que sugirió el sistema.
+  RecommendationBlock edit(List<String> items) =>
+      copyWith(decision: RecommendationDecision.editado, finalItems: items);
+
+  /// El bloque queda vacío y marcado como rechazado.
+  RecommendationBlock reject() => copyWith(
+    decision: RecommendationDecision.rechazado,
+    finalItems: const [],
+  );
+
+  /// Contenido con el que el bloque entra a la configuración del evento.
+  List<String> get currentItems => switch (decision) {
+    RecommendationDecision.editado => finalItems,
+    RecommendationDecision.rechazado => const [],
+    _ => suggestedItems,
+  };
+
+  RecommendationBlock copyWith({
+    RecommendationDecision? decision,
+    List<String>? suggestedItems,
+    List<String>? finalItems,
+    List<String>? originEvents,
+  }) {
+    return RecommendationBlock(
+      type: type,
+      decision: decision ?? this.decision,
+      suggestedItems: suggestedItems ?? this.suggestedItems,
+      finalItems: finalItems ?? this.finalItems,
+      originEvents: originEvents ?? this.originEvents,
+    );
   }
 }
 
-/// Historial simulado de una organización con dos ediciones por evento.
-final demoEvents = List<Event>.unmodifiable([
-  Event(
-    id: 1,
-    name: 'Congreso de Salud 2025',
-    category: EventCategory.congress,
-    modality: EventModality.onsite,
-    date: DateTime(2025, 3, 14),
-    estimatedAttendance: 450,
-    registrations: 412,
-  ),
-  Event(
-    id: 2,
-    name: 'Congreso de Salud 2024',
-    category: EventCategory.congress,
-    modality: EventModality.onsite,
-    date: DateTime(2024, 3, 22),
-    estimatedAttendance: 400,
-    registrations: 371,
-  ),
-  Event(
-    id: 3,
-    name: 'Feria Empresarial 2025',
-    category: EventCategory.fair,
-    modality: EventModality.hybrid,
-    date: DateTime(2025, 9, 5),
-    estimatedAttendance: 600,
-    registrations: 574,
-  ),
-  Event(
-    id: 4,
-    name: 'Feria Empresarial 2024',
-    category: EventCategory.fair,
-    modality: EventModality.hybrid,
-    date: DateTime(2024, 9, 6),
-    estimatedAttendance: 550,
-    registrations: 510,
-  ),
-  Event(
-    id: 5,
-    name: 'Seminario de Innovación 2025',
-    category: EventCategory.seminar,
-    modality: EventModality.online,
-    date: DateTime(2025, 11, 18),
-    estimatedAttendance: 120,
-    registrations: 109,
-  ),
-  Event(
-    id: 6,
-    name: 'Seminario de Innovación 2024',
-    category: EventCategory.seminar,
-    modality: EventModality.online,
-    date: DateTime(2024, 11, 19),
-    estimatedAttendance: 110,
-    registrations: 101,
-  ),
-]);
+class SuggestedDate {
+  final SuggestedDateType type;
+  final int daysBeforeSuggested;
+  final int? daysBeforeFinal;
+  final RecommendationDecision decision;
+
+  const SuggestedDate({
+    required this.type,
+    required this.daysBeforeSuggested,
+    required this.daysBeforeFinal,
+    required this.decision,
+  });
+}
+
+class EventRecommendation {
+  final List<RecommendationBlock> blocks;
+  final List<SuggestedDate> dates;
+  final bool simulated;
+
+  const EventRecommendation({
+    required this.blocks,
+    required this.dates,
+    this.simulated = true,
+  });
+
+  EventRecommendation copyWith({
+    List<RecommendationBlock>? blocks,
+    List<SuggestedDate>? dates,
+  }) {
+    return EventRecommendation(
+      blocks: blocks ?? this.blocks,
+      dates: dates ?? this.dates,
+      simulated: simulated,
+    );
+  }
+}
+
+class Event {
+  final String id;
+  final String organizationId;
+  final String name;
+  final EventCategory category;
+  final EventModality modality;
+  final int estimatedAttendees;
+  final int registrations;
+  final DateTime date;
+  final EventStatus status;
+  final String? baseEventName;
+  final List<RegistrationField> registrationFields;
+  final List<ScheduleActivity> schedule;
+  final List<EventTask> tasks;
+  final EventRecommendation recommendation;
+
+  const Event({
+    required this.id,
+    required this.organizationId,
+    required this.name,
+    required this.category,
+    required this.modality,
+    required this.estimatedAttendees,
+    this.registrations = 0,
+    required this.date,
+    required this.status,
+    required this.registrationFields,
+    required this.schedule,
+    required this.tasks,
+    required this.recommendation,
+    this.baseEventName,
+  });
+
+  Event copyWith({
+    List<RegistrationField>? registrationFields,
+    List<ScheduleActivity>? schedule,
+    List<EventTask>? tasks,
+    EventRecommendation? recommendation,
+  }) {
+    return Event(
+      id: id,
+      organizationId: organizationId,
+      name: name,
+      category: category,
+      modality: modality,
+      estimatedAttendees: estimatedAttendees,
+      registrations: registrations,
+      date: date,
+      status: status,
+      baseEventName: baseEventName,
+      registrationFields: registrationFields ?? this.registrationFields,
+      schedule: schedule ?? this.schedule,
+      tasks: tasks ?? this.tasks,
+      recommendation: recommendation ?? this.recommendation,
+    );
+  }
+}

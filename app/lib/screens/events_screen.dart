@@ -1,72 +1,126 @@
 import 'package:flutter/material.dart';
 
+import '../models/auth_user.dart';
+import '../data/mock_events.dart';
 import '../models/event.dart';
 import '../pages/events_page.dart';
+import 'event_detail_screen.dart';
+import 'new_event_screen.dart';
 
-/// Conserva el filtro y el historial durante la sesión de demostración.
+/// Screen anfitriona del listado de eventos (F-02).
+/// Mantiene el filtro activo y coordina la navegación con datos simulados.
 class EventsScreen extends StatefulWidget {
-  const EventsScreen({
-    super.key,
-    required this.canCreate,
-    required this.onEventSelected,
-    this.onNewEvent,
-  });
+  final AuthUser user;
 
-  final bool canCreate;
-  final void Function(BuildContext context, Event event) onEventSelected;
-  final Future<Event?> Function(BuildContext context)? onNewEvent;
+  const EventsScreen({super.key, required this.user});
 
   @override
   State<EventsScreen> createState() => _EventsScreenState();
 }
 
 class _EventsScreenState extends State<EventsScreen> {
-  final _events = [...demoEvents];
-  EventCategory? _category;
+  EventCategory? _selectedCategory;
 
-  Future<void> _createEvent() async {
-    // El asistente devuelve el evento confirmado. Si se cancela, devuelve null.
-    final event = await widget.onNewEvent?.call(context);
-    if (!mounted || event == null) return;
-    setState(() => _events.add(event));
+  List<Event> get _visibleEvents {
+    final events = mockEvents
+        .where(
+          (event) =>
+              event.organizationId == widget.user.organizationId &&
+              (_selectedCategory == null ||
+                  event.category == _selectedCategory),
+        )
+        .toList();
+    events.sort((a, b) => b.date.compareTo(a.date));
+    return events;
+  }
+
+  void _openDetail(Event event) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => EventDetailScreen(event: event, user: widget.user),
+      ),
+    );
+  }
+
+  void _openNewEvent({Event? baseEvent}) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => NewEventScreen(user: widget.user, baseEvent: baseEvent),
+      ),
+    );
+  }
+
+  Future<void> _confirmLogout() async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('¿Cerrar sesión?'),
+        content: const Text(
+          'Al salir, nadie más podrá ver los datos de tu organización desde este dispositivo.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            key: const Key('confirm_logout_button'),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Cerrar sesión'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout == true && mounted) {
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // La lista visible se deriva del historial sin cambiar el orden del original.
-    final visibleEvents =
-        _events
-            .where((event) => _category == null || event.category == _category)
-            .toList()
-          ..sort((a, b) => b.date.compareTo(a.date));
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Peewah')),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: EventsPage(
-            events: visibleEvents,
-            selectedCategory: _category,
-            onFilterChanged: (category) => setState(() => _category = category),
-            onEventSelected: (event) => widget.onEventSelected(context, event),
-          ),
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Eventos'),
+            Text(
+              widget.user.organizationName,
+              style: const TextStyle(
+                color: Color(0xFF737373),
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
-      bottomNavigationBar: widget.canCreate && widget.onNewEvent != null
+      body: EventsPage(
+        user: widget.user,
+        events: _visibleEvents,
+        selectedCategory: _selectedCategory,
+        onCategoryChanged: (category) {
+          setState(() => _selectedCategory = category);
+        },
+        onEventTap: _openDetail,
+        onUseAsBase: (event) => _openNewEvent(baseEvent: event),
+        onNewEvent: _openNewEvent,
+        onLogout: _confirmLogout,
+      ),
+      // La acción permanece visible al desplazarse por el listado.
+      bottomNavigationBar: widget.user.isAdmin
           ? SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
                 child: FilledButton.icon(
+                  key: const Key('new_event_button'),
+                  onPressed: _openNewEvent,
+                  icon: const Icon(Icons.add_rounded),
+                  label: const Text('Crear evento'),
                   style: FilledButton.styleFrom(
                     minimumSize: const Size.fromHeight(52),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
                   ),
-                  onPressed: _createEvent,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Nuevo evento'),
                 ),
               ),
             )

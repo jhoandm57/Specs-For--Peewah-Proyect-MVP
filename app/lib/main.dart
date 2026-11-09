@@ -1,40 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'screens/event_card_preview_screen.dart';
-import 'screens/events_screen.dart';
 import 'theme/app_theme.dart';
+import 'screens/login_screen.dart';
+import 'screens/event_card_preview_screen.dart';
 
-// Punto de entrada del proyecto Flutter.
-void main() => runApp(const MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const PeewahApp());
+}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class PeewahApp extends StatelessWidget {
+  const PeewahApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Peewah',
+      title: 'Recomendador de Eventos Peewah',
       debugShowCheckedModeBanner: false,
-      theme: buildAppTheme(),
+      theme: AppTheme.light,
+      locale: const Locale('es'),
+      supportedLocales: const [Locale('es')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       initialRoute: '/',
       routes: {
-        '/': (_) => EventsScreen(
-          canCreate: true,
-          // Los avisos permiten comprobar la conexión mientras llegan las rutas del equipo.
-          onEventSelected: (context, event) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Evento seleccionado: ${event.name}')),
-            );
-          },
-          onNewEvent: (context) async {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('El asistente está pendiente de integración'),
-              ),
-            );
-            return null;
-          },
-        ),
+        '/': (context) => const LoginScreen(),
         '/vista-previa/tarjeta': (_) => const EventCardPreview(),
       },
     );

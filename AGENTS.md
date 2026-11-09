@@ -36,9 +36,13 @@ inscripciones y los recordatorios.
 
 ## Estructura actual
 
-El prototipo Flutter se encuentra en el subdirectorio app/. Su punto de entrada es
-app/lib/main.dart y las plataformas generadas son Android, web y Windows.
-Los documentos del proyecto están en docs/ y las skills de SDD en .agents/skills/.
+El prototipo Flutter se ejecuta desde app/ y comienza en app/lib/main.dart.
+La interfaz se divide en screens/, pages/, components/ y theme/. Los modelos
+están en models/. Los datos simulados viven en data/ y la lógica de sesión
+en domain/ y state/. Las pruebas viven en app/test/.
+
+Para ejecutar en web, desde app/: flutter run -d chrome.
+Para probar, desde app/: flutter test.
 
 ## Documentos
 
